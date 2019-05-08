@@ -4,7 +4,7 @@
 */
 
 // Pretend that you're given this code by a coworker who asks for you to figure out what it does. 
-How do you break the code down to understand its purpose?
+// How do you break the code down to understand its purpose?
 
 const flattened = [[0,1], [2,3], [4,5]].reduce(
   (a,b) => a.concat(b), []);
