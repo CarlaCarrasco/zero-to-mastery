@@ -1,0 +1,12 @@
+.form {
+    width: 700px;
+    background:
+    radial-gradient(circle at 100% 50%, transparent 20%, rgba(252, 70, 106, 0.534)  21%, rgba(252, 70, 106, 0.534) 34%, transparent 35%, transparent),
+    radial-gradient(circle at 0% 50%, transparent 20%, rgba(252, 70, 106, 0.534)  21%, rgba(252, 70, 106, 0.534)    34%, transparent 35%, transparent) 0 -50px;
+    background-color: rgba(63, 94, 251, 0.699);
+    background-size:75px 100px;
+}
+
+.pinkish { 
+    background-color: rgba(243, 0, 101, 0.548);
+}
