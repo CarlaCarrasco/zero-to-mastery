@@ -11,7 +11,7 @@ import Clarifai from 'clarifai';
 import './App.css';
 
 const app = new Clarifai.App({
-  apiKey: '915dc1d962b8494bbb3a28cbe37ef9af'
+  apiKey: '6c46dc22769f4fd09b96c7ee63b28c73'
 })
 const particlesOptions = {
   particles: {
@@ -33,8 +33,25 @@ class App extends Component {
         imageUrl: '',
         box: {},
         route: 'signin',
-        isSignedIn: false
+        isSignedIn: false,
+        user: {
+          id: "",
+          name:'',
+          email: '',
+          entries: 0,
+          joined: ''
+        }
       }
+  }
+
+  loadUser = (user) => {
+    this.setState({user: {
+      id: user.id,
+      name:user.name,
+      email: user.email,
+      entries: user.entries,
+      joined: user.joined
+    }})
   }
 
   // componentDidMount() {
@@ -62,18 +79,58 @@ class App extends Component {
     this.setState({box: box})
   }
   onInputChange = (event) => {
+    console.log('onInputChange');
     this.setState({input: event.target.value});
   }
-
-  onButtonSubmit = () => {
+  onPictureSubmit = () => {
+    console.log('button clicked')
     this.setState({imageUrl: this.state.input});
     app.models
-    .predict(
-      Clarifai.FACE_DETECT_MODEL, 
-      this.state.input)
-    .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
-    .catch(err => console.log(err));
+      .predict(
+        Clarifai.FACE_DETECT_MODEL,
+        this.state.input)
+      .then(response => {
+        if (response) {
+          fetch('http://localhost:3000/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.user.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, { entries: count}))
+            })
+
+        }
+        this.displayFaceBox(this.calculateFaceLocation(response))
+      })
+      .catch(err => console.log(err));
   }
+  // onPictureSubmit = () => {
+  //   this.setState({imageUrl: this.state.input});
+  //   console.log('hello')
+  //   app.models
+  //   .predict(
+  //     Clarifai.FACE_DETECT_MODEL, 
+  //     this.state.input)
+  //   .then(response => {
+  //       // if we have a response
+  //       if(response) {
+  //         // run image
+  //         fetch('http://localhost:3001/image', {
+  //           method: 'put',
+  //           headers: {'content-Type': 'application/json'},
+  //           body: JSON.stringify({
+  //           id: this.state.user.id
+  //         })
+  //       })
+  //     }
+  //     this.displayFaceBox(this.calculateFaceLocation(response));
+  //   })
+  //     .catch(err => console.log(err));
+  //   }
 
   onRouteChange = (route) => {
     if (route === 'signout') {
@@ -82,7 +139,6 @@ class App extends Component {
       this.setState({isSignedIn: true});
     }
     this.setState({route: route});
-
     
   }
   render() {
@@ -95,22 +151,26 @@ class App extends Component {
         <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
         {route === 'home' 
          ? <div>
-            <Rank />
+            <Rank name={this.state.user.name} entries={this.state.user.entries}/>
             <Logo />
-            <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
+            <ImageLinkForm 
+              onInputChange={this.onInputChange} 
+              onPictureSubmit={this.onPictureSubmit}
+            />
             
             <FaceRecognition box={box} imageUrl={imageUrl}  />
         </div>
         : (
           this.state.route === 'signin' 
-          ? <Signin onRouteChange={this.onRouteChange}/>
-          : <Register onRouteChange={this.onRouteChange}/>
+          ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+          : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
         )
-    }
+        }
       </div>
     );
-  }
-}
+        }
+      }
+
 
 
 export default App;

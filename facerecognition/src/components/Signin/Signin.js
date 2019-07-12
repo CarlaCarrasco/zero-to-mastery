@@ -4,7 +4,7 @@ import './Signin.css';
 class Signin extends React.Component {
     // create State
     constructor(props){
-        super();
+        super(props);
         this.state = {
             signInEmail: '',
             signInPassword: ''
@@ -37,8 +37,9 @@ class Signin extends React.Component {
             })
         })
             .then(res => res.json())
-            .then(data => {
-                if(data ==='success'){
+            .then(user => {
+                if(user.id){
+                    this.props.loadUser(user)
                     this.props.onRouteChange('home'); // sends user to home page
                     console.log('logged in');
                 }
@@ -71,17 +72,19 @@ class Signin extends React.Component {
                             />
                         </div>
                         <label className="pa0 ma0 lh-copy f6 pointer"><input type="checkbox"/> Remember me</label>
-                        </fieldset>
+                        
                         <div className="">
                             <input
                                 onClick={this.onSubmitSignIn} 
-                                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+                                className="b ph3 pv2 mt4 input-reset ba b--black bg-transparent grow pointer f6 dib" 
                                 type="submit" 
                                 value="Sign in"/>
                         </div>
-                        <div className="lh-copy mt3">
-                            <p onClick={() => onRouteChange('register')} href="#0" className="f6 link dim black db pointer">Register</p>
-                            <a href="#0" className="f6 link dim black db">Forgot your password?</a>
+                        </fieldset>
+                        <div className="lh-copy mt5 ml4">
+                            <p onClick={() => onRouteChange('register')} href="#0" className="f6 fw6 link dim black db pointer">Register</p>
+
+                            <a href="#0" className="f6 fw6 link dim black db">Forgot your password?</a>
                         </div>
                     </div>
                 </main>
