@@ -43,13 +43,10 @@ class Signin extends React.Component {
                     this.props.onRouteChange('home'); // sends user to home page
                     console.log('logged in');
                 }
-                // else {
-                //     console.log('not successful')
-                // }
             })
         }
     render() {
-        const { onRouteChange } = this.props;
+        // const { onRouteChange } = this.props;
 
         return (
             <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-1 mw6 shadow-2 center">
@@ -80,12 +77,13 @@ class Signin extends React.Component {
                                 type="submit" 
                                 value="Sign in"/>
                         </div>
-                        </fieldset>
-                        <div className="lh-copy mt5 ml4">
-                            <p onClick={() => onRouteChange('register')} href="#0" className="f6 fw6 link dim black db pointer">Register</p>
+                        <div className="lh-copy mt4 ml4">
+                            {/* <p onClick={() => onRouteChange('register')} href="#0" className="f6 fw6 link dim black db pointer">Register</p> */}
 
                             <a href="#0" className="f6 fw6 link dim black db">Forgot your password?</a>
                         </div>
+                        </fieldset>
+                    
                     </div>
                 </main>
             </article>
