@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 class Register extends React.Component {
     // create State
     constructor(props){
@@ -41,7 +40,7 @@ class Register extends React.Component {
         })
             .then(res => res.json())
             .then(user => {
-                if(user){
+                if(user.id){
                     this.props.loadUser(user); // 1. load user
                     this.props.onRouteChange('home'); // 2. sends user to home page
                 }

@@ -7,12 +7,8 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 import './App.css';
 
-const app = new Clarifai.App({
-  apiKey: '6c46dc22769f4fd09b96c7ee63b28c73'
-})
 const particlesOptions = {
   particles: {
     number: {
@@ -78,31 +74,37 @@ class App extends Component {
     this.setState({input: event.target.value});
   }
   onPictureSubmit = () => {
-    console.log('button clicked')
+    //dconsole.log('button clicked')
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
-      .then(response => {
-        if (response) {
+      fetch('http://localhost:3000/imageurl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        if(res) {
           fetch('http://localhost:3000/image', {
             method: 'put',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'content-Type': 'application/json'},
             body: JSON.stringify({
-              id: this.state.user.id
+              id:this.state.user.id
             })
           })
-            .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.user, { entries: count}))
-            })
-
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, { entries: count}))
+          })
+          .catch(console.log) // catch any errors that happen without us knowing
         }
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      })
-      .catch(err => console.log(err));
-  }
+        this.displayFaceBox(this.calculateFaceLocation(res))
+        })
+        .catch(err => console.log(err));
+    }
+
+   
 
   onRouteChange = (route) => {
     if (route === 'signout') {
