@@ -69,14 +69,14 @@ class App extends Component {
     console.log(box); 
     this.setState({box: box})
   }
-  onInputChange = (event) => {
+  onInputChange = (event) => { 
     console.log('onInputChange');
     this.setState({input: event.target.value});
   }
   onPictureSubmit = () => {
     //dconsole.log('button clicked')
     this.setState({imageUrl: this.state.input});
-      fetch('http://localhost:3000/imageurl', {
+      fetch('https://still-oasis-63584.herokuapp.com/imageurl', {
         method: 'post',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -86,7 +86,7 @@ class App extends Component {
       .then(res => res.json())
       .then(res => {
         if(res) {
-          fetch('http://localhost:3000/image', {
+          fetch('https://still-oasis-63584.herokuapp.com/image', {
             method: 'put',
             headers: {'content-Type': 'application/json'},
             body: JSON.stringify({
